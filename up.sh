@@ -25,6 +25,8 @@ for i in $(seq "${SWARM_NUM_WORKERS}"); do
         -p $((2377 + $i)):2375 \
         docker:${DOCKER_VERSION}-dind
     docker --host=localhost:$((2377 + $i)) swarm join --token ${SWARM_WORKER_TOKEN} ${SWARM_MASTER_IP}:2377
+    ln -s $(docker inspect --format='{{.LogPath}}' worker-$i) worker-${i}.json
+    echo "Log File           :   worker-${i}.json"
 done
 
 docker service create \
